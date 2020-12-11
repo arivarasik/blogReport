@@ -14,8 +14,6 @@ MathJax.Hub.Queue(function() {
         all[i].SourceElement().parentNode.className += ' has-jax';
     }
 });
-</script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML-full"></script>
 ---
 layout: default
 title: Blog Post
@@ -130,3 +128,7 @@ Range compression of the audio helps stabilize the training of the network by pr
 [1]:https://looking-to-listen.github.io
 [2]:https://looking-to-listen.github.io/avspeech/
 [3]:https://github.com/davidsandberg/facenet
+
+</script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML-full"></script>
+
