@@ -1,12 +1,9 @@
-
 ---
 layout: default
 title: Blog Post
 tagline: Speech Source Separation using Audio-Visual Features
 description: Blog post for EE 380L Data Mining Project
 ---
-
-<center><img src="https://render.githubusercontent.com/render/math?math=\text{triplet loss}=\sum_{i=1}^N [||f^a_i-f_i^p||_2^2-||f^a_i-f_i^n||_2^2 %2B \alpha]_{%2B}"><\center>
 
 ***Alexander Fiore, Alexander Phillips, Arivarasi Kesawaram, Dae Yeol Lee, Dan Jacobellis***
 
@@ -65,6 +62,10 @@ The dataset used for the speech separation was a subset of Google’s AVSpeech d
 While the visual information may possibly contain information to aid the audio source separation, dealing with the raw visual data as-is can be quite expensive in terms of data volume. Taking 720p videos for example, we are dealing with data having 1280x720 pixels per frame, where we have 75 frames for 3 second portion of 25fps video, and 3 channels for colors. Assuming 8 bit precision, the data size of a single train/test sample exceeds 200MB, which not only depletes the memories for mini-batch training but also makes the convolutional computation expensive due to the high dimensions. Therefore, the goal of visual pre-processing is to reduce the data dimension significantly while retaining the relevant information for the task. Below is the overall flowchart of the visual pre-processing steps.
 ![flowchart_visual_features](/img/flowchart_visualFeat.png)    
 Intuitively, the region that can aid audio source separation is the face area, so we first applied face detection model Multi-task Cascaded CNN (MTCNN). We used the pre-trained implementation to obtain the bounding box coordinates of the face from each frame. Using the bounding box coordinates, we collected the patches containing the face, adjusted each patch to have identical dimensions of 160x160, and normalized the RGB intensity values to range from 0 to 1. The collected face volumes are then fed into the FaceNet where each face volume is transformed into a latent vector denoted face embeddings.
+FaceNet is originally intended to discriminate between different faces. On the training stage, a triplet containing one anchor face, one positive example (same face), and one negative example (difference face) is provided. The weights of the network are updated by a triplet loss defined as,  
+<img src="https://render.githubusercontent.com/render/math?math=\text{triplet loss}=\sum_{i=1}^N [||f^a_i-f_i^p||_2^2-||f^a_i-f_i^n||_2^2 %2B \alpha]_{%2B}">
+where <img src="https://render.githubusercontent.com/render/math?math=\text{triplet loss}=i"> refers to the index of the possible triplets ranging from 1 to N, and  is the margin that indicates how closer distance should the positive example be w.r.t. the anchor when compared with a negative example. The fia,fip, and fin indicates the embeddings for the anchor, positive example, and negative example for the i-th triplet, respectively. We see from the loss formulation that the weights learns to output a vector (or embeddings) with closer distance if same face, WHILE further distance if different faces. The embedding gets to contain information necessary to discriminate different faces and ignore the less necessary info such as illumination conditions.
+
 ![triplet_loss](/img/triplet_loss.png)  
 ![intermediate features](/img/intermediate_features.png)  
   
