@@ -1,4 +1,3 @@
-<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
 ---
 layout: default
@@ -6,7 +5,8 @@ title: Blog Post
 tagline: Speech Source Separation using Audio-Visual Features
 description: Blog post for EE 380L Data Mining Project
 ---
-$x+1$
+
+<img src="https://render.githubusercontent.com/render/math?math=triplet loss=/f^a_i-f_i^n">
 
 ***Alexander Fiore, Alexander Phillips, Arivarasi Kesawaram, Dae Yeol Lee, Dan Jacobellis***
 
