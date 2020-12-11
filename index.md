@@ -10,7 +10,7 @@ description: Blog post for EE 380L Data Mining Project
 [comment]: # (Abstract: 1-2 Paragraphs)
 # 1. Introduction and Motivation
 Imagine you are at a holiday party, or a gathering with friends and you are engaged in a discussion with some of your friends. A lot of people are talking simultaneously, but you are not paying attention to those conversations. But then, you hear someone say your name suddenly and you realize a group of people having a discussion behind you. Now you are unable to concentrate on the discussion you were having previously, because you are curious to know what the other people are talking about you. You weren’t deliberately eavesdropping on the group’s conversation, you just happened to hear your name. Is it even possible to unconsciously eavesdrop? 
-![Cocktail Party Effect](/img/party_illustration.png)
+![Cocktail Party Effect](/img/party_illustration.png)  
 This scenario is what we call a ‘cock-tail party phenomenon’. It describes the ability to focus one’s listening attention on a single speaker among a mixture of conversations and background noises, ignoring other conversations. Our brain does this Audio-source separation all the time without us even realizing it. There is a lot that is unknown about the processes in the human auditory system that achieve this, and developing computational methods to replicate it remains an open problem. The binaural processing of the human auditory system in combination with visual cues allows us to effectively focus our attention on a single speaker when multiple speakers and other noise are present. When audio containing multiple speakers is recorded digitally and combined into a single channel (e.g. the recent presidential debates), the visual and spatial component of the acoustic field is lost, and it becomes much harder for a listener to understand the speakers individually. So, this is a difficult problem to solve in the world of signal processing.
 In this project, we have built a Deep Neural Network (DNN) model, which is a joint audio-video separation model that can take in both auditory and visual features extracted from a video and decomposes the input mixed audio track into distinct output audio tracks, one for each speaker in the video. We train the model to estimate a time-frequency audio mask that separates two speakers in a single channel recording. This mask when applied to the input mixed audio, will filter out the desired individual track. 
 This is what a high-level view of what the model looks like.
@@ -83,7 +83,7 @@ Range compression of the audio helps stabilize the training of the network by pr
 # 5. Model Selection and Learning
 # 6. Results & Conclusions
  
-  
+# Misc.  
 * \[Data Pre-Processing & Exploration\]
   * \[Feature engineering/selection\]
   * \[Relevant Plots\]
