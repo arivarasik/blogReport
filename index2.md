@@ -6,7 +6,7 @@ tagline: Speech Source Separation using Audio-Visual Features
 description: Blog post for EE 380L Data Mining Project
 ---
 
-<img src="https://render.githubusercontent.com/render/math?math=triplet loss=/f^a_i-f_i^n">
+<img src="https://render.githubusercontent.com/render/math?math=\text{triplet loss}=\sum_{i=1}^N \norm f^a_i-f_i^n">
 
 ***Alexander Fiore, Alexander Phillips, Arivarasi Kesawaram, Dae Yeol Lee, Dan Jacobellis***
 
