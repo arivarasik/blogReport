@@ -40,7 +40,7 @@ YouTube videos referenced by URLs in the AVspeech dataset were downloaded and pr
 A variant of the structural similarity measure used in image quality assessment was used as the loss between the predicted and ideal audio masks during the training. The network was trained using a consumer GPU on a personal workstation iterating over the full dataset in several epochs. It produces speech separation masks which show some similarity to the ideal masks, but the error remains quite high judging by listening to the reconstructed audio streams.
 
 # 2. Technical Approach
-![flowchart_overall](/img/flowchart_overall.png)  
+![flowchart_overall](/img/flowchart_overall.PNG)  
 The figure above shows an overview of the preprocessed data inputs, the learning model, and predicted output or separating mask. In summary, the 1792 x 75 face embeddings from the output of the FaceNet model are fed into several convolutional layers with the constraint of having shared weights for each speaker’s face. In parallel, the STFT of the audio mixture is fed into additional convolution layers custom to the audio’s dimensions. Finally the audio and visual features are combined and passed through recurrent layers to exploit the temporal nature of the data. A separating mask is predicted as the final output layer for one speaker such that the second speaker’s mask can be derived from the complement of the predicted mask.
 
 # 3. Dataset and Dataset Synthesis
@@ -60,8 +60,13 @@ The dataset used for the speech separation was a subset of Google’s AVSpeech d
 # 4. Pre-Processing
 ## Visual Features
 While the visual information may possibly contain information to aid the audio source separation, dealing with the raw visual data as-is can be quite expensive in terms of data volume. Taking 720p videos for example, we are dealing with data having 1280x720 pixels per frame, where we have 75 frames for 3 second portion of 25fps video, and 3 channels for colors. Assuming 8 bit precision, the data size of a single train/test sample exceeds 200MB, which not only depletes the memories for mini-batch training but also makes the convolutional computation expensive due to the high dimensions. Therefore, the goal of visual pre-processing is to reduce the data dimension significantly while retaining the relevant information for the task. Below is the overall flowchart of the visual pre-processing steps.
-
+![flowchart_visual_features](/img/flowchart_visualFeat.png)    
 Intuitively, the region that can aid audio source separation is the face area, so we first applied face detection model Multi-task Cascaded CNN (MTCNN). We used the pre-trained implementation to obtain the bounding box coordinates of the face from each frame. Using the bounding box coordinates, we collected the patches containing the face, adjusted each patch to have identical dimensions of 160x160, and normalized the RGB intensity values to range from 0 to 1. The collected face volumes are then fed into the FaceNet where each face volume is transformed into a latent vector denoted face embeddings.
+![flowchart_visual_features](/img/triplet_loss.png)  
+![flowchart_visual_features](/img/intermediate_feat.png)  
+  
+
+
 ## Audio Features
 The STFT (Short-time fourier transform), was chosen to represent the audio as a joint time-frequency distribution. The STFT is one of the simplest ways to construct a time-frequency distribution and is ubiquitous for audio signal processing. It is constructed by taking the discrete fourier transform (DFT) over a sliding time window. For example, you might take the DFT over a 10 ms window, giving you an estimate of the signal spectrum locally for that 10 ms window, then repeat this for successive windows to construct a matrix.
 
