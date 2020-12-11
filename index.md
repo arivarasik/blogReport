@@ -1,9 +1,12 @@
 ---
 layout: default
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_CHTML"></script>
 title: Blog Post
 tagline: Speech Source Separation using Audio-Visual Features
 description: Blog post for EE 380L Data Mining Project
 ---
+$x+1$
 
 ***Alexander Fiore, Alexander Phillips, Arivarasi Kesawaram, Dae Yeol Lee, Dan Jacobellis***
 
