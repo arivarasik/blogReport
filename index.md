@@ -10,7 +10,7 @@ description: Blog post for EE 380L Data Mining Project
 [comment]: # (Abstract: 1-2 Paragraphs)
 # 1. Introduction and Motivation
 Imagine you are at a holiday party, or a gathering with friends and you are engaged in a discussion with some of your friends. A lot of people are talking simultaneously, but you are not paying attention to those conversations. But then, you hear someone say your name suddenly and you realize a group of people having a discussion behind you. Now you are unable to concentrate on the discussion you were having previously, because you are curious to know what the other people are talking about you. You weren’t deliberately eavesdropping on the group’s conversation, you just happened to hear your name. Is it even possible to unconsciously eavesdrop? 
-![Cocktail Party Effect](/img/cocktail.png)
+![Cocktail Party Effect](/img/party_illustration.png)
 This scenario is what we call a ‘cock-tail party phenomenon’. It describes the ability to focus one’s listening attention on a single speaker among a mixture of conversations and background noises, ignoring other conversations. Our brain does this Audio-source separation all the time without us even realizing it. There is a lot that is unknown about the processes in the human auditory system that achieve this, and developing computational methods to replicate it remains an open problem. The binaural processing of the human auditory system in combination with visual cues allows us to effectively focus our attention on a single speaker when multiple speakers and other noise are present. When audio containing multiple speakers is recorded digitally and combined into a single channel (e.g. the recent presidential debates), the visual and spatial component of the acoustic field is lost, and it becomes much harder for a listener to understand the speakers individually. So, this is a difficult problem to solve in the world of signal processing.
 In this project, we have built a Deep Neural Network (DNN) model, which is a joint audio-video separation model that can take in both auditory and visual features extracted from a video and decomposes the input mixed audio track into distinct output audio tracks, one for each speaker in the video. We train the model to estimate a time-frequency audio mask that separates two speakers in a single channel recording. This mask when applied to the input mixed audio, will filter out the desired individual track. 
 This is what a high-level view of what the model looks like.
@@ -40,25 +40,29 @@ YouTube videos referenced by URLs in the AVspeech dataset were downloaded and pr
 A variant of the structural similarity measure used in image quality assessment was used as the loss between the predicted and ideal audio masks during the training. The network was trained using a consumer GPU on a personal workstation iterating over the full dataset in several epochs. It produces speech separation masks which show some similarity to the ideal masks, but the error remains quite high judging by listening to the reconstructed audio streams.
 
 # 2. Technical Approach
-![flowchart_overall](/img/flowchart_overall.PNG)  
+![flowchart_overall](/img/flowchart_overall.png)  
 The figure above shows an overview of the preprocessed data inputs, the learning model, and predicted output or separating mask. In summary, the 1792 x 75 face embeddings from the output of the FaceNet model are fed into several convolutional layers with the constraint of having shared weights for each speaker’s face. In parallel, the STFT of the audio mixture is fed into additional convolution layers custom to the audio’s dimensions. Finally the audio and visual features are combined and passed through recurrent layers to exploit the temporal nature of the data. A separating mask is predicted as the final output layer for one speaker such that the second speaker’s mask can be derived from the complement of the predicted mask.
 
 # 3. Dataset and Dataset Synthesis
 The dataset used for the speech separation was a subset of Google’s AVSpeech dataset. In its raw form, the AVSpeech dataset provides a collection of YouTube links of three to ten second videos of single person speech. The AVSpeech data set contains over 280,000 random samples of videos of speakers with mixed languages with no interfering background noise. To build a training set for single channel speech separation the single speaker audio from the YouTube videos would need to be superimposed to synthesize a useful dataset. A spectrogram from the normalized mixed audio was then derived using a short-time fourier transform and concatenated with the visual feature vector. The following steps to generate a usable dataset can be described below.
 
-* \Extract (download and re-encode) raw audio/video data
-  * \youtube-dl to download data
-  * \ffmpeg to extract frames and audio stream
-* \Normalize Audio, Crop Images, and extract features from data
-  * \Construct time-frequency images
-  * \Apply FaceNet face detection model
-  * \Resample face images to uniform size
-* \Choose pairs of videos to create training data consisting of mixed speech
-  * \Discard videos with occluded faces
-  * \Construct ideal mask for each pair
+* Extract (download and re-encode) raw audio/video data
+  * youtube-dl to download data
+  * ffmpeg to extract frames and audio stream
+* Normalize Audio, Crop Images, and extract features from data
+  * Construct time-frequency images
+  * Apply FaceNet face detection model
+  * Resample face images to uniform size
+* Choose pairs of videos to create training data consisting of mixed speech
+  * Discard videos with occluded faces
+  * Construct ideal mask for each pair
 
-  
-# Audio Features
+# 4. Pre-Processing
+## Visual Features
+While the visual information may possibly contain information to aid the audio source separation, dealing with the raw visual data as-is can be quite expensive in terms of data volume. Taking 720p videos for example, we are dealing with data having 1280x720 pixels per frame, where we have 75 frames for 3 second portion of 25fps video, and 3 channels for colors. Assuming 8 bit precision, the data size of a single train/test sample exceeds 200MB, which not only depletes the memories for mini-batch training but also makes the convolutional computation expensive due to the high dimensions. Therefore, the goal of visual pre-processing is to reduce the data dimension significantly while retaining the relevant information for the task. Below is the overall flowchart of the visual pre-processing steps.
+
+Intuitively, the region that can aid audio source separation is the face area, so we first applied face detection model Multi-task Cascaded CNN (MTCNN). We used the pre-trained implementation to obtain the bounding box coordinates of the face from each frame. Using the bounding box coordinates, we collected the patches containing the face, adjusted each patch to have identical dimensions of 160x160, and normalized the RGB intensity values to range from 0 to 1. The collected face volumes are then fed into the FaceNet where each face volume is transformed into a latent vector denoted face embeddings.
+## Audio Features
 The STFT (Short-time fourier transform), was chosen to represent the audio as a joint time-frequency distribution. The STFT is one of the simplest ways to construct a time-frequency distribution and is ubiquitous for audio signal processing. It is constructed by taking the discrete fourier transform (DFT) over a sliding time window. For example, you might take the DFT over a 10 ms window, giving you an estimate of the signal spectrum locally for that 10 ms window, then repeat this for successive windows to construct a matrix.
 
 ![STFT](/img/stft.png)
@@ -75,7 +79,10 @@ Historically, speech separation is usually performed by defining the ideal mask 
 
 Range compression of the audio helps stabilize the training of the network by preventing outlying values from dominating the gradient. Usually a spectrogram is viewed in decibels which compresses its range, but since we’ve left the values as complex and can be negative, we instead compress the range using a hyperbolic tangent.
 
-  
+ 
+# 5. Model Selection and Learning
+# 6. Results & Conclusions
+ 
   
 * \[Data Pre-Processing & Exploration\]
   * \[Feature engineering/selection\]
