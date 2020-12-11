@@ -7,11 +7,14 @@ description: Blog post for EE 380L Data Mining Project
 
 ***Alexander Fiore, Alexander Phillips, Arivarasi Kesawaram, Dae Yeol Lee, Dan Jacobellis***
 
-![Cocktail Party Effect](/img/cocktail.png)
-
 [comment]: # (Abstract: 1-2 Paragraphs)
 
 The visual component of human speech provides rich information about the acoustic signal that can be exploited for source separation. For our project, we train a model to estimate the time-frequency audio mask that separates two speakers in a single channel recording that utilizes the visual information of the speech. Over 5000 videos were retrieved from the [AVspeech][2] dataset and combined into pairs to form speech mixtures and ground truth labels. To our knowledge, this project is the first publicly available end-to-end implementation for this task.
+![Cocktail Party Effect](/img/cocktail.png)
+This scenario is what we call a ‘cock-tail party phenomenon’. It describes the ability to focus one’s listening attention on a single speaker among a mixture of conversations and background noises, ignoring other conversations. Our brain does this Audio-source separation all the time without us even realizing it. There is a lot that is unknown about the processes in the human auditory system that achieve this, and developing computational methods to replicate it remains an open problem. The binaural processing of the human auditory system in combination with visual cues allows us to effectively focus our attention on a single speaker when multiple speakers and other noise are present. When audio containing multiple speakers is recorded digitally and combined into a single channel (e.g. the recent presidential debates), the visual and spatial component of the acoustic field is lost, and it becomes much harder for a listener to understand the speakers individually. So, this is a difficult problem to solve in the world of signal processing.
+In this project, we have built a Deep Neural Network (DNN) model, which is a joint audio-video separation model that can take in both auditory and visual features extracted from a video and decomposes the input mixed audio track into distinct output audio tracks, one for each speaker in the video. We train the model to estimate a time-frequency audio mask that separates two speakers in a single channel recording. This mask when applied to the input mixed audio, will filter out the desired individual track. 
+This is what a high-level view of what the model looks like.
+![Looking to listen](/img/looking-to-listen.png)
 
 [comment]: # (Introduction & Background / Problem being addressed and why it’s important / Related work / approach and rationale / contribution or novel characteristics)
 # 1. Introduction and Motivation
